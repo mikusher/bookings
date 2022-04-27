@@ -12,4 +12,5 @@ type AppConfig struct {
 	InfoLog       *log.Logger
 	InProduction  bool
 	Sessions      *scs.SessionManager
+	Static        string
 }

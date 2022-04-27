@@ -21,6 +21,7 @@ func main() {
 
 	// change to true if in production
 	app.InProduction = false
+	app.Static = "./static/"
 
 	session = scs.New()
 	session.Lifetime = 24 * time.Hour
