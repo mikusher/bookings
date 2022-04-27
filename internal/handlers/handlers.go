@@ -3,9 +3,9 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/mikusher/bookings/pkg/config"
-	"github.com/mikusher/bookings/pkg/models"
-	"github.com/mikusher/bookings/pkg/render"
+	"github.com/mikusher/bookings/internal/config"
+	"github.com/mikusher/bookings/internal/models"
+	"github.com/mikusher/bookings/internal/render"
 	"log"
 	"net/http"
 )

@@ -3,8 +3,8 @@ package main
 import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	"github.com/mikusher/bookings/pkg/config"
-	"github.com/mikusher/bookings/pkg/handlers"
+	"github.com/mikusher/bookings/internal/config"
+	"github.com/mikusher/bookings/internal/handlers"
 	"net/http"
 )
 
