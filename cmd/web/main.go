@@ -52,6 +52,8 @@ func main() {
 	}
 
 	err = server.ListenAndServe()
-	log.Fatal(err)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 }

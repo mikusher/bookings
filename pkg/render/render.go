@@ -29,10 +29,10 @@ func AddDefaultData(td *models.TemplateData, r *http.Request) *models.TemplateDa
 
 // RenderTemplate renders a template
 func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, td *models.TemplateData) {
+	var tc map[string]*template.Template
 
-	tc := map[string]*template.Template{}
-	// use cache to render template (dev, prod)
 	if app.UseCache {
+		// get the template cache from the app config
 		tc = app.TemplateCache
 	} else {
 		tc, _ = CreateTemplateCache()
@@ -40,11 +40,11 @@ func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, td *mod
 
 	t, ok := tc[tmpl]
 	if !ok {
-		log.Fatal("Could not get template cache")
+		log.Fatal("Could not get template from template cache")
 	}
 
 	buf := new(bytes.Buffer)
-	// add default data to templates
+
 	td = AddDefaultData(td, r)
 
 	_ = t.Execute(buf, td)
