@@ -12,17 +12,20 @@ import (
 	"path/filepath"
 )
 
-//global var
 var functions = template.FuncMap{}
 
-// load config
 var app *config.AppConfig
 
-func StartTemplates(a *config.AppConfig) {
+// NewTemplates sets the config for the template package
+func NewTemplates(a *config.AppConfig) {
 	app = a
 }
 
+// AddDefaultData adds data for all templates
 func AddDefaultData(td *models.TemplateData, r *http.Request) *models.TemplateData {
+	td.Flash = app.Session.PopString(r.Context(), "flash")
+	td.Warning = app.Session.PopString(r.Context(), "warning")
+	td.Error = app.Session.PopString(r.Context(), "error")
 	td.CSRFToken = nosurf.Token(r)
 	return td
 }

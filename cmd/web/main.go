@@ -1,10 +1,12 @@
 package main
 
 import (
+	"encoding/gob"
 	"fmt"
 	"github.com/alexedwards/scs/v2"
 	"github.com/mikusher/bookings/internal/config"
 	"github.com/mikusher/bookings/internal/handlers"
+	"github.com/mikusher/bookings/internal/models"
 	"github.com/mikusher/bookings/internal/render"
 	"log"
 	"net/http"
@@ -18,18 +20,20 @@ var session *scs.SessionManager
 
 // main is the main function
 func main() {
+	// what am I going to put in the session
+	gob.Register(models.Reservation{})
 
-	// change to true if in production
+	// change this to true when in production
 	app.InProduction = false
-	app.Static = "./static/"
 
+	// set up the session
 	session = scs.New()
 	session.Lifetime = 24 * time.Hour
 	session.Cookie.Persist = true
 	session.Cookie.SameSite = http.SameSiteLaxMode
 	session.Cookie.Secure = app.InProduction
 
-	app.Sessions = session
+	app.Session = session
 
 	tc, err := render.CreateTemplateCache()
 	if err != nil {
@@ -39,21 +43,20 @@ func main() {
 	app.TemplateCache = tc
 	app.UseCache = false
 
-	repo := handlers.StartRepo(&app)
-	handlers.StartHandlers(repo)
-	render.StartTemplates(&app)
+	repo := handlers.NewRepo(&app)
+	handlers.NewHandlers(repo)
+
+	render.NewTemplates(&app)
 
 	fmt.Println(fmt.Sprintf("Staring application on port %s", portNumber))
 
-	// start server
-	server := &http.Server{
+	srv := &http.Server{
 		Addr:    portNumber,
-		Handler: routers(&app),
+		Handler: routes(&app),
 	}
 
-	err = server.ListenAndServe()
+	err = srv.ListenAndServe()
 	if err != nil {
 		log.Fatal(err)
 	}
-
 }
