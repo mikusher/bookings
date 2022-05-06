@@ -64,10 +64,10 @@ func (m *Repository) PostReservation(w http.ResponseWriter, r *http.Request) {
 	}
 
 	reservation := models.Reservation{
-		FirstName: r.Form.Get("first_name"),
-		LastName:  r.Form.Get("last_name"),
-		Email:     r.Form.Get("email"),
-		Phone:     r.Form.Get("phone"),
+		FirstName: m.App.SanitizerPolicy.Sanitize(r.Form.Get("first_name")),
+		LastName:  m.App.SanitizerPolicy.Sanitize(r.Form.Get("last_name")),
+		Email:     m.App.SanitizerPolicy.Sanitize(r.Form.Get("email")),
+		Phone:     m.App.SanitizerPolicy.Sanitize(r.Form.Get("phone")),
 	}
 
 	form := forms.New(r.PostForm)
@@ -107,10 +107,10 @@ func (m *Repository) Availability(w http.ResponseWriter, r *http.Request) {
 
 // PostAvailability handles post
 func (m *Repository) PostAvailability(w http.ResponseWriter, r *http.Request) {
-	start := r.Form.Get("start")
-	end := r.Form.Get("end")
+	start := m.App.SanitizerPolicy.Sanitize(r.Form.Get("start"))
+	end := m.App.SanitizerPolicy.Sanitize(r.Form.Get("end"))
 
-	w.Write([]byte(fmt.Sprintf("start date is %s and end is %s", start, end)))
+	w.Write(m.App.SanitizerPolicy.SanitizeBytes([]byte(fmt.Sprintf("start date is %s and end is %s", start, end))))
 }
 
 type jsonResponse struct {

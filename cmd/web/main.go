@@ -4,6 +4,7 @@ import (
 	"encoding/gob"
 	"fmt"
 	"github.com/alexedwards/scs/v2"
+	"github.com/microcosm-cc/bluemonday"
 	"github.com/mikusher/bookings/internal/config"
 	"github.com/mikusher/bookings/internal/handlers"
 	"github.com/mikusher/bookings/internal/helpers"
@@ -20,6 +21,7 @@ const portNumber = ":8080"
 var app config.AppConfig
 var session *scs.SessionManager
 var InfoLogger *log.Logger
+var sanitizer *bluemonday.Policy
 
 // main is the main function
 func main() {
@@ -71,6 +73,12 @@ func run() error {
 
 	app.TemplateCache = tc
 	app.UseCache = false
+
+	// security sanitizer
+	sanitizer = bluemonday.StrictPolicy()
+	sanitizer.AllowStandardURLs()
+
+	app.SanitizerPolicy = sanitizer
 
 	repo := handlers.NewRepo(&app)
 	handlers.NewHandlers(repo)
